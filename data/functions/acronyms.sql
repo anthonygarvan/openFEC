@@ -15,10 +15,18 @@ returns text as $$
     begin
         return case acronym
             when 'P' then 'Primary'
+            when 'PR' then 'Primary runoff'
+            when 'SP' then 'Special primary'
+            when 'SPR' then 'Special primary runoff'
             when 'G' then 'General'
+            when 'GR' then 'General runoff'
+            when 'SG' then 'Special general'
+            when 'SGR' then 'Special general runoff'
             when 'O' then 'Other'
             when 'C' then 'Convention'
+            when 'SC' then 'Special convention'
             when 'R' then 'Runoff'
+            when 'SR' then 'Special runoff'
             when 'S' then 'Special'
             when 'E' then 'Recount'
         end;
