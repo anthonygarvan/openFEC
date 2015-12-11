@@ -5,7 +5,7 @@ returns text as $$
             when 'I' then 'Incumbent'
             when 'C' then 'Challenger'
             when 'O' then 'Open seat'
-            else 'Unknown'
+            else ''
         end;
     end
 $$ language plpgsql;
@@ -44,6 +44,17 @@ returns text as $$
     end
 $$ language plpgsql;
 
+create or replace function expand_office_description(acronym text)
+returns text as $$
+    begin
+        return case acronym
+            when 'P' then 'Presidental'
+            when 'S' then 'Senate'
+            when 'H' then 'House'
+        end;
+    end
+$$ language plpgsql;
+
 create or replace function expand_candidate_status(acronym text)
 returns text as $$
     begin
@@ -52,7 +63,7 @@ returns text as $$
             when 'F' then 'Future candidate'
             when 'N' then 'Not yet a candidate'
             when 'P' then 'Prior candidate'
-            else 'Unknown'
+            else ''
         end;
     end
 $$ language plpgsql;
@@ -82,7 +93,7 @@ returns text as $$
             when 'U' then 'Unauthorized'
             when 'B' then 'Lobbyist/Registrant PAC'
             when 'D' then 'Leadership PAC'
-            else 'Unknown'
+            else ''
         end;
     end
 $$ language plpgsql;
@@ -107,7 +118,7 @@ returns text as $$
             when 'X' then 'Party - Nonqualified'
             when 'Y' then 'Party - Qualified'
             when 'Z' then 'National Party Nonfederal Account'
-            else 'Unknown'
+            else ''
         end;
     end
 $$ language plpgsql;

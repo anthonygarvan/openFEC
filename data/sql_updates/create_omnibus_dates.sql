@@ -1,13 +1,65 @@
+
+
+
+-- for running locally
+
+create or replace function expand_office_description(acronym text)
+returns text as $$
+    begin
+        return case acronym
+            when 'P' then 'Presidental'
+            when 'S' then 'Senate'
+            when 'H' then 'House'
+        end;
+    end
+$$ language plpgsql;
+
+
+create or replace function expand_election_type(acronym text)
+returns text as $$
+    begin
+        return case acronym
+            when 'P' then 'Primary'
+            when 'PR' then 'Primary runoff'
+            when 'SP' then 'Special primary'
+            when 'SPR' then 'Special primary runoff'
+            when 'G' then 'General'
+            when 'GR' then 'General runoff'
+            when 'SG' then 'Special general'
+            when 'SGR' then 'Special general runoff'
+            when 'O' then 'Other'
+            when 'C' then 'Convention'
+            when 'SC' then 'Special convention'
+            when 'R' then 'Runoff'
+            when 'SR' then 'Special runoff'
+            when 'S' then 'Special'
+            when 'E' then 'Recount'
+        end;
+    end
+$$ language plpgsql;
+
+--
+
+create or replace function generate_election_title(trc_election_type_id text, office_sought text, state bigint)
+returns text as $$
+    begin
+        return case when state > 1
+            then expand_office_description(office_sought) || ' multi-state'
+        else expand_office_description(office_sought) || ' ' || expand_election_type(trc_election_type_id) || ' ' ||
+            election_state
+        end;
+    end
+$$ language plpgsql;
+
+
 drop materialized view if exists ofec_omnibus_dates_mv_tmp;
 create materialized view ofec_omnibus_dates_mv_tmp as
 with elections as (
     select
         'election-G' as category,
-        expand_office(office_sought) || ' General' as title,
-        expand_office(office_sought) || ' ' ||
-            'General ' ||
-            string_agg(election_state, ', ') as description,
         array_agg(election_state order by election_state)::text[] as states,
+        generate_election_title(trc_election_type_id::text, office_sought::text, count(election_state)) as title,
+        expand_office_description(office_sought) || ' General Election multi-state' as description,
         null as location,
         election_date::timestamp as start_date,
         null::timestamp as end_date
@@ -19,12 +71,13 @@ with elections as (
         office_sought is not null
     group by
         office_sought,
-        election_date
+        election_date,
+        trc_election_type_id
     union all
     select
         'election-' || trc_election_type_id as category,
-        expand_office(office_sought) || ' ' || expand_election_type(trc_election_type_id) as title,
-        expand_office(office_sought) || ' ' ||
+        expand_office_description(office_sought) || ' ' || expand_election_type(trc_election_type_id) as title,
+        expand_office_description(office_sought) || ' ' ||
             expand_election_type(trc_election_type_id) || ' ' ||
             election_state as description,
         array[election_state]::text[] as states,
