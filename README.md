@@ -25,7 +25,7 @@ All FEC repositories:
 - [openFEC](https://github.com/18F/openfec): betaFEC’s API
 - [swagger-ui](https://github.com/18F/swagger-ui): forked repo that generates our interactive API documentation
 - [openFEC-web-app](https://github.com/18f/openfec-web-app): the web app for exploring campaign finance data
-- [fec-style](https://github.com/18F/fec-style): shared styles and user interface components, including this project's feedback tool
+- [fec-style](https://github.com/18F/fec-style): shared styles and user interface components, including this project's glossary and feedback tools
 - [fec-cms](https://github.com/18F/fec-cms): this project's content management system (CMS) 
 - [proxy](https://github.com/18F/fec-proxy): this is a lightweight app that coordinates the paths between the web app and CMS
 
@@ -132,7 +132,7 @@ If you haven't used Cloud Foundry in other projects, you'll need to install the 
 ```
 cf install-plugin autopilot -r CF-Community
 ```
-[Learn more about autopilot](https://github.com/concourse/autopilot).
+    [Learn more about autopilot](https://github.com/concourse/autopilot).
 
 3. Set environment variables used by the deploy script:
 
@@ -160,7 +160,7 @@ invoke deploy --space dev
 ```
 This command will explicitly target the `dev` space.
 
-To set up a service (optional):
+##### Setting up a service (optional):
 
 ```
 cf target -s dev
@@ -184,8 +184,7 @@ cf target [dev|stage|prod] && cf push -f manifest_<[dev|stage|prod]>.yml [api|we
 ```
 
 
-------------
-
+### Title here (other dev tasks)
 
 
 ##### Task queue
